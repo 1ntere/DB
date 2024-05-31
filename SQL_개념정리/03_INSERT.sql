@@ -51,10 +51,6 @@ VALUES('D0', '개발운영부', 'L1');
 
 ROLLBACK; --저장X, 돌아가기
 
-
-
-
-
 --INSERT에서 특정 부분을 선택해서 넣을 때는 컬럼명을 작성해서 넣어줌
 --INSERT INTO 테이블명(컬럼명1, 컬럼명2, ...) VALUES (컬럼명1에해당하는값, 컬럼명2에해당하는값, ...);
 
@@ -63,9 +59,7 @@ ROLLBACK; --저장X, 돌아가기
 테이블에 기록된 컬럼의 값을 수행하는 구문
 [작성법]
 UPDATE 테이블명 SET 컬럼명 = 변경할값
-[WHRER 컬럼명 비교연산자 비교값];--필수 X
-
-
+[WHERE 컬럼명 비교연산자 비교값];--필수 X
 */
 --DEPARTMENT2 테이블에서 DEPT_ID가 'D9'인 부서 정보 조회
 SELECT * FROM DEPARTMENT2
@@ -84,11 +78,45 @@ WHERE DEPT_ID = 'D9';
 --되돌리기를 원한다면 ROLLBACK 작성
 ROLLBACK;
 
+--조건을 설정하지 않고 모든 행의 컬럼 값 변경
+--UPDATE 테이블명 SET 컬럼명 = 변경할내용작성;
+
+--여러 컬럼을 한번에 수정할 경우 콤마(,)로 컬럼을 구분해서 수정
+
+--D2는 회계관리부인데, D0에 회계관리팀으로 변경
+UPDATE DEPARTMENT2
+SET DEPT_ID = 'D0', DEPT_TITLE = '회계관리팀'
+WHERE DEPT_ID = 'D2';
+
+    --조회하기
+SELECT * FROM DEPARTMENT2;
+
+ROLLBACK;
 
 /*****
---EMPLOYEE3 전체 테이블 삭제
-DELETE FROM EMPLOYEE3;
+삭제하기
+
+테이블 안에 존재하는 값들을 모두 삭제하는 구문
+[작성법]
+DELETE FROM 테이블명 WHERE 조건설정;
+만약 WHERE 조건을 설정하지 않으면 모든 행이 다 삭제됨
+
+DELETE FROM 테이블명;
+테이블 안에 있는 내용을 모두 삭제
+
+DELETE FROM 테이블명
+WHERE 컬럼명 = 삭제할컬럼값;
+테이블 안에서 특정한 컬럼명에서 특정한 컬럼값에 해당하는 부분만 삭제
+
 --완전 삭제 : COMMIT
 --되돌리기 : ROLLBACK
-COMMIT;
+
+★ 주의할 점
+DELETE  : 테이블 안에 있는 내용을 삭제
+DROP    : 테이블 자체를 삭제
 *****/
+SELECT * FROM EMPLOYEE2;
+
+DROP TABLE EMPLOYEE2;
+
+COMMIT;

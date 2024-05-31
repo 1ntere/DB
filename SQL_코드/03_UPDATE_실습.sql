@@ -96,10 +96,11 @@ SELECT EMP_NAME, EMAIL
 FROM EMPLOYEE2;
 
 --핸드폰 번호 010뒤에 -를 붙여서 변경
---LIKE  무조건 맨 앞이 010이어야 하고 중간에 오는 010은 변경 x
+
 UPDATE EMPLOYEE2
 SET PHONE = REPLACE(PHONE, '010', '010-')
 WHERE PHONE LIKE '010%';
+          --LIKE '010%' : 무조건 맨 앞이 010이어야 하고 중간에 오는 010은 변경 x
 
 /*
 오류 발생
@@ -115,22 +116,6 @@ SET HIRE_DATE = TO_DATE('2000-01-02', 'YYYY-MM-DD')
 WHERE HIRE_DATE = TO_DATE('1999-09-09', 'YYYY-MM-DD');
 
 COMMIT;
-
---조건을 설정하지 않고 모든 행의 컬럼 값 변경
---UPDATE 테이블명 SET 컬럼명 = 변경할내용작성;
-
---여러 컬럼을 한번에 수정할 경우 콤마(,)로 컬럼을 구분해서 수정
-
---D2는 회계관리부인데, D0에 회계관리팀으로 변경
-UPDATE DEPARTMENT2
-SET DEPT_ID = 'D0', DEPT_TITLE = '회계관리팀'
-WHERE DEPT_ID = 'D2';
-
-    --조회하기
-SELECT * FROM DEPARTMENT2;
-
-ROLLBACK;
-
 
 -- UPDATE 한 번에 여러 컬럼 업데이트
 -- 진행하기 전 EMPLOYEE3 만들기
@@ -195,7 +180,7 @@ FROM EMPLOYEE3;
 
 ROLLBACK;
 
---EMPLOYEE3 전체 테이블 삭제
+--EMPLOYEE3 테이블의 전체 데이터 삭제
 DELETE FROM EMPLOYEE3;
 
 --완전 삭제 : COMMIT

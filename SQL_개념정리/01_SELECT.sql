@@ -385,7 +385,7 @@ SELECT 구문에서 제일 마지막에 해석됨
 SELECT 컬럼명1, 컬럼명2 AS "별칭", 컬럼명3, ...
 FROM 테이블명
 WHERE 조건식
-ORDER BY 컬럼명|별칭 [컬럼순서(오름, 내림 차순)]
+ORDER BY 컬럼명|별칭|컬럼순서 [(오름, 내림 차순)];
 
 컬럼순서의 기본 값은 오름차순
 오름차순    : ASC(ASCending), 제일 낮은 것부터 먼저 나와서 점차 높아짐
@@ -433,11 +433,7 @@ ORDER BY 2 DESC; --위의 코드와 동일하게 나옴
 --ORDER BY절에 수식 적용
 --EMPLOYEE 테이블에서 이름, 연봉을 조회
 --연봉 내림차순으로 조회
-SELECT EMP_NAME, SALARY * 12
-FROM EMPLOYEE
-ORDER BY SALARY * 12 DESC;
-       --SALARY * 12 : 월급 * 12달 = 연봉
-                   --DESC : 내림차순
+
 
 --ORDER BY 로 정렬을 진행할 경우에는
 --SELECT 절에 작성된 컬럼을 그대로 따라 작성한 경우가 많음
@@ -477,9 +473,14 @@ ORDER BY DEPT_CODE, SALARY DESC;
 SELECT EMP_NAME AS "이름", DEPT_CODE AS "부서코드", JOB_CODE AS "직급코드"
 FROM EMPLOYEE
 ORDER BY 부서코드 ASC, 직급코드 DESC, 이름; --이름은 자동으로 오름차순 정렬
---부서코드 ASC : 
---직급코드 CESC : 
---이름 : 이름 ASC 와 동일하며, 이름 오름차순으로 정렬
+       --부서코드 ASC : 부서코드 오름차순 정렬
+                    --직급코드 DESC : 직급코드 내림차순 정렬
+       --부서코드 ASC, 직급코드 DESC : 1. 부서코드 오름차순 정렬
+       --                            2. 같은 부서코드 내에서 직급코드 내림차순 정렬
+                                  --이름 : 이름 ASC 와 동일하며, 이름 오름차순으로 정렬
+       --부서코드 ASC, 직급코드 DESC, 이름 : 1. 부서코드 오름차순 정렬
+       --                                 2. 같은 부서코드 내에서 직급코드 내림차순 정렬
+       --                                 3. 같은 직급코드에서 이름 오름차순 정렬
 /*
 1. 부서코드 오름차순 정렬
 제일 먼저 부서코드가 오름차순으로 정렬

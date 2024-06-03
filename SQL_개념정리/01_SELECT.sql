@@ -374,3 +374,128 @@ DUAL(DUmmy tAbLe)
 SELECT SYSDATE, SYSTIMESTAMP
 FROM DUAL;
 
+/*****
+ORDER BY 절
+
+SELECT문의 조회 결과(RESULT SET)을 정렬할 때 사용하는 구문
+
+SELECT 구문에서 제일 마지막에 해석됨
+
+[작성법]
+SELECT 컬럼명1, 컬럼명2 AS "별칭", 컬럼명3, ...
+FROM 테이블명
+WHERE 조건식
+ORDER BY 컬럼명|별칭 [컬럼순서(오름, 내림 차순)]
+
+컬럼순서의 기본 값은 오름차순
+오름차순    : ASC(ASCending), 제일 낮은 것부터 먼저 나와서 점차 높아짐
+내림차순    : DESC(DESCending), 제일 높은 것부터 먼저 나와서 점차 낮아짐
+*****/
+
+--EMPLOYEE 테이블에서 모든 사원의 이름, 급여 조회
+--급여 오름차순으로 정렬
+SELECT EMP_NAME, SALARY
+FROM EMPLOYEE
+ORDER BY SALARY ASC;
+
+--EMPLOYEE 테이블에서 모든 사원의 이름, 급여 조회
+--급여 내림차순으로 정렬
+SELECT EMP_NAME, SALARY
+FROM EMPLOYEE
+ORDER BY SALARY DESC;
+
+--EMPLOYEE 테이블에서 부서코드가 D5, D6, D9인 사원의 사번, 이름, 부서코드를 조회
+--부서코드 오름차순으로 조회
+SELECT EMP_ID, EMP_NAME, DEPT_CODE
+FROM EMPLOYEE
+WHERE DEPT_CODE IN ('D5','D6','D9')
+--WHERE DEPT_CODE = 'D5' OR 'D6' OR 'D9'
+ORDER BY DEPT_CODE; --ASC가 기본 값이기 때문에 ASC를 쓰지 않아도 오름차순이 기본 값
+
+/*컬럼 순서를 이용해서 정렬하는 방법*/
+--EMPLOYEE 테이블에서 급여가 300만원 이상, 600만원 이하인 사원의 사번, 이름, 급여 조회
+--이름 내림차순으로 조회
+SELECT EMP_ID, EMP_NAME, SALARY
+FROM EMPLOYEE
+WHERE SALARY BETWEEN 3000000 AND 6000000
+ORDER BY EMP_NAME DESC;
+
+--EMP_NAME이 현재 SELECT할 컬럼 중에 2번째로 위치하고 있으므로
+--ORDER BY 2 를 통해 정렬할 수 있음
+SELECT EMP_ID, EMP_NAME, SALARY
+FROM EMPLOYEE
+WHERE SALARY BETWEEN 3000000 AND 6000000
+ORDER BY 2 DESC; --위의 코드와 동일하게 나옴
+       --2 : SELECT 한 컬럼 중 2번째에 있는 컬럼으로 정렬하라
+       --    만약에 EMP_ID로 정렬하고 싶다면 1을 작성
+       --    만약에 SALARY로 정렬하고 싶다면 1을 작성
+
+--ORDER BY절에 수식 적용
+--EMPLOYEE 테이블에서 이름, 연봉을 조회
+--연봉 내림차순으로 조회
+SELECT EMP_NAME, SALARY * 12
+FROM EMPLOYEE
+ORDER BY SALARY * 12 DESC;
+       --SALARY * 12 : 월급 * 12달 = 연봉
+                   --DESC : 내림차순
+
+--ORDER BY 로 정렬을 진행할 경우에는
+--SELECT 절에 작성된 컬럼을 그대로 따라 작성한 경우가 많음
+
+/*ORDER BY절에서 별칭 사용하기*/
+--SELECT절 해석 이후 ORDER BY절이 해석되기 때문에
+--SELECT절에서 설정한 별칭을 ORDER BY절에서 사용할 수 있음
+--EMPLOYEE 테이블에서 이름, 연봉을 조회
+--연봉 내림차순 조회
+SELECT EMP_NAME, SALARY * 12 AS "연봉"
+FROM EMPLOYEE
+ORDER BY 연봉 DESC; -- SALARY * 12 대신에 "연봉"을 작성할 수 있음
+
+--주의할 점 : ORDER BY에서는 별칭 사용이 가능하지만
+--           WHERE의 경우에는 조건을 설정해주어야 하기 때문에 별칭 사용이 불가능함
+    --ORDER BY  : 결과를 가지고 정리를 하여 출력해주는 속성
+    --WHERE     : 결과를 나타내기 위한 조건을 지정하는 속성
+    --조건으로 진행이 되지 않았는데 별칭부터 붙인 것이기 때문
+    
+/*정렬 중첩*/
+--먼저 작성된 정렬 기준을 깨지 않고 다음 작성된 정렬 기준 적용
+
+--예시
+--EMPLOYEE 테이블에서 이름, 부서코드, 급여를 조회
+--부서코드 오름차순, 급여 내림차순으로 조회
+--급여를 가장 높게 받는 사람이 궁금한 것이 아님
+--각각의 부서에서 급여를 가장 높게 받는 사람이 궁금한 것
+SELECT EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+ORDER BY DEPT_CODE, SALARY DESC;
+       --DEPT_CODE : 부서코드로 오름차순
+                  --SALARY DESC : 급여로 내림차순
+       --DEPT_CODE, SALARY DESC : 부서코드를 기준으로 오름차순을 하는데 같은 값을 가질 때는 급여를 내림차순으로 정렬
+
+--EMPLOYEE 테이블에서 이름, 부서코드, 직급코드 조회
+--부서코드 오름차순, 직급코드 내림차순, 이름 오름차순
+SELECT EMP_NAME AS "이름", DEPT_CODE AS "부서코드", JOB_CODE AS "직급코드"
+FROM EMPLOYEE
+ORDER BY 부서코드 ASC, 직급코드 DESC, 이름; --이름은 자동으로 오름차순 정렬
+--부서코드 ASC : 
+--직급코드 CESC : 
+--이름 : 이름 ASC 와 동일하며, 이름 오름차순으로 정렬
+/*
+1. 부서코드 오름차순 정렬
+제일 먼저 부서코드가 오름차순으로 정렬
+D1, D2, D5, D6, D8, D9, NULL 순서로 정렬
+
+2. 직급코드 내림차순 정렬
+동일한 부서코드 내에서 직급코드가 내림차순으로 정렬됨
+D1 부서의 경우 직급코드 내림차순이기 때문에 J7이 J6부터 먼저 생성됨
+
+3. 이름 오름차순 정렬
+동일한 부서코드와 직급코드 내에서 이름이 오름차순으로 정렬
+D1부서에서 전지연씨와 차태연씨는 J6으로 직급코드가 동일하기 때문에
+이름 오름차순 으로 전지연씨가 차태연씨보다 먼저 나옴
+*/
+--★ SELECT에서 선택한 컬럼 위치와 관계없이 정렬이 됨
+--위에서 작성한 ORDER BY 순으로 컬럼을 보길 원한다면 아래와 같이 작성
+SELECT DEPT_CODE AS "부서코드", JOB_CODE AS "직급코드", EMP_NAME AS "이름"
+FROM EMPLOYEE
+ORDER BY 부서코드 ASC, 직급코드 DESC, 이름 ASC;

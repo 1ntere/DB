@@ -1,0 +1,161 @@
+/*****JOIN 실습*****/
+--1. EMPLOYEE 테이블과 DEPARTMENT 테이블을 조인해서
+--각 직원의 이름과 그 직원이 속한 부서명 조회
+--ANSI
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE
+JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID);
+--ORACLE
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE, DEPARTMENT
+WHERE DEPT_CODE = DEPT_ID;
+
+--2. EMPLOYEE 테이블과 DEPARTMENT 테이블을 조인해서
+--각 직원의 이름과 그 직원이 속한 부서명, 급여 조회
+--ANSI
+SELECT EMP_NAME, DEPT_TITLE, SALARY
+FROM EMPLOYEE
+JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID);
+--ORACLE
+SELECT EMP_NAME, DEPT_TITLE, SALARY
+FROM EMPLOYEE, DEPARTMENT
+WHERE DEPT_CODE = DEPT_ID;
+
+--3. EMPLOYEE 테이블과 SAL_GRADE테이블을 조인해서
+--각 직원의 이름과 급여 등급 조회
+--ANSI
+SELECT EMP_NAME, SAL_GRADE.SAL_LEVEL
+FROM EMPLOYEE
+JOIN SAL_GRADE ON (EMPLOYEE.SAL_LEVEL = SAL_GRADE.SAL_LEVEL);
+/*
+★ 오류 발생
+SELECT EMP_NAME, SAL_LEVEL
+FROM EMPLOYEE
+JOIN SAL_GRADE ON (SAL_LEVEL = SAL_LEVEL);
+★ 오류코드
+ORA-00918: column ambiguously defined
+★ 원인
+다른 테이블에서 컬럼명은 다르지만 서로 의미하는 바가 같은 컬럼끼리는
+컬럼명A = 컬럼명a 사용할 수 있음
+
+하지만 다른 테이블에서 컬럼명이 같을 때에는 참조하는 테이블이 무엇인지 작성해줘야 함
+테이블명.컬럼명A = 테이블명.컬럼명A
+SELECT로 참조할 때에도 테이블 명을 작성해서 어디서 어느 컬럼을 가지고 오는지 작성해줘야 함
+★ 해결방안
+SELECT EMP_NAME, SAL_GRADE.SAL_LEVEL
+FROM EMPLOYEE
+JOIN SAL_GRADE ON (EMPLOYEE.SAL_LEVEL = SAL_GRADE.SAL_LEVEL);
+*/
+--ORACLE
+SELECT e.EMP_NAME, s.SAL_LEVEL
+FROM EMPLOYEE e, SAL_GRADE s
+            --e : EMPLOYEE 테이블을 쉽게 사용할 수 있도록 e로 별칭을 지정함
+                         --s : SAL_GRADE 테이블을 쉽게 사용할 수 있도록 s로 별칭을 지정함
+WHERE e.SAL_LEVEL = s.SAL_LEVEL;
+
+--각 직원의 이름과 그 직원이 속한 부서의 부서명 및 직급 조회
+--EMPLOYEE 테이블, DEPARTMENT 테이블, JOB 테이블 필요
+--ANSI
+SELECT e.EMP_NAME, d.DEPT_TITLE, j.JOB_NAME
+FROM EMPLOYEE e
+JOIN DEPARTMENT d ON (e.DEPT_CODE = d.DEPT_ID)
+JOIN JOB j ON (e.JOB_CODE = j.JOB_CODE);
+/*
+e.EMP_NAME  d.DEPT_TITLE    j.JOB_NAME
+전지연	    인사관리부	    대리
+차태연	    인사관리부	    대리
+방명수	    인사관리부	    사원
+*/
+--ORACLE
+SELECT e.EMP_NAME, d.DEPT_TITLE, j.JOB_NAME
+FROM EMPLOYEE e, DEPARTMENT d, JOB j
+WHERE e.DEPT_CODE = d.DEPT_ID AND e.JOB_CODE = j.JOB_CODE;
+/*
+e.EMP_NAME  d.DEPT_TITLE    j.JOB_NAME
+전지연	    인사관리부	    대리
+차태연	    인사관리부	    대리
+방명수	    인사관리부	    사원
+*/
+
+--이젠 ORACLE 방식을 주로 사용할 것임
+
+--1. 직원의 이메일 주소와 해당 부서의 부서명 조회
+--TABLE : EMPLOYEE, DEPARTMENT
+--SELECT : EMAIL, DEPT_TITLE
+SELECT e.EMAIL, d.DEPT_TITLE
+FROM EMPLOYEE e, DEPARTMENT d
+WHERE e.DEPT_CODE = d.DEPT_ID;
+
+--2. 급여가 300만원 이상인 직원들의 이름과 그 직원이 속한 부서명 조회
+--TABLE : EMPLOYEE, DEPARTMENT
+--SELECT : EMP_NAME, DEPT_TITLE
+SELECT e.EMP_NAME, d.DEPT_TITLE
+FROM EMPLOYEE e, DEPARTMENT d
+WHERE e.DEPT_CODE = d.DEPT_ID AND SALARY >= 3000000;
+
+--3. 각 직원의 이름과 그 직원이 속한 부서명, 급여 등급 조회
+--TABLE : EMPLOYEE, DEPARTMENT, SAL_GRADE
+--SELECT : EMP_NAME, DEPT_TITLE, SAL_LEVEL
+SELECT e.EMP_NAME, d.DEPT_TITLE, s.SAL_LEVEL
+FROM EMPLOYEE e, DEPARTMENT d, SAL_GRADE s
+WHERE e.DEPT_CODE = d.DEPT_ID AND e.SAL_LEVEL = s.SAL_LEVEL;
+
+--4. 직급이 대리이면서 아시아 지역에 근무하는 직원 조회
+--사번, 이름, 직급명, 부서명, 근무지역명, 급여를 조회
+SELECT e.EMP_ID, e.EMP_NAME, j.JOB_NAME, d.DEPT_TITLE, l.LOCAL_NAME, e.SALARY
+FROM EMPLOYEE e, JOB j, DEPARTMENT d, LOCATION l
+WHERE e.JOB_CODE = j.JOB_CODE AND e.DEPT_CODE = d.DEPT_ID AND d.LOCATION_ID = l.LOCAL_CODE
+    AND j.JOB_NAME = '대리' AND l.LOCAL_NAME LIKE 'ASIA%';
+    --AND e.JOB_CODE = 'j6' AND l.LOCAL_CODE IN ('L1', 'L2', 'L3'); 도 사용 가능
+
+--1. D5 부서에 속한 직원들의 이름과 직급명 조회
+--EMPLOYEE, JOB
+SELECT e.EMP_NAME, j.JOB_NAME
+FROM EMPLOYEE e, JOB j
+WHERE e.JOB_CODE = j.JOB_CODE AND e.DEPT_CODE = 'D5';
+
+--2. 각 부서의 부서명과 해당 부서에 속한 직원의 평균 급여조회
+--EMPLOYEE, DEPARTMENT
+SELECT d.DEPT_TITLE, FLOOR(AVG(e.SALARY))
+FROM EMPLOYEE e, DEPARTMENT d
+WHERE e.DEPT_CODE = d.DEPT_ID
+GROUP BY d.DEPT_TITLE;--GROUP BY를 WHERE 뒤에 써야 함
+/*
+★ 오류 발생1
+SELECT d.DEPT_TITLE, FLOOR(AVG(e.SALARY))
+FROM EMPLOYEE e, DEPARTMENT d
+GROUP BY d.DEPT_TITLE
+WHERE e.DEPT_CODE = d.DEPT_ID;
+★ 오류코드
+ORA-00933: SQL command not properly ended
+★ 원인
+WHERE로 JOIN을 먼저 EMPLOYEE와 DEPARTMENT를 테이블끼리 묶어준 후
+d.DEPT_TITLE로 평균급여를 묶어준다.
+★ 문제 해결 코드1
+SELECT d.DEPT_TITLE, FLOOR(AVG(e.SALARY))
+FROM EMPLOYEE e, DEPARTMENT d
+WHERE e.DEPT_CODE = d.DEPT_ID
+GROUP BY d.DEPT_TITLE;
+*/
+/*
+★ 오류 발생2
+SELECT d.DEPT_TITLE, FLOOR(AVG(e.SALARY)), d.DEPT_ID
+FROM EMPLOYEE e, DEPARTMENT d
+GROUP BY d.DEPT_TITLE
+WHERE e.DEPT_CODE = d.DEPT_ID;
+★ 오류코드
+ORA-00933: SQL command not properly ended
+★ 원인
+평균 급여를 계산해야 하므로 d.DEPT_TITLE과 d.DEPT_ID로 둘 다 묶어주어야 함
+★ 문제 해결 코드2
+SELECT d.DEPT_TITLE, FLOOR(AVG(e.SALARY)), d.DEPT_ID
+FROM EMPLOYEE e, DEPARTMENT d
+GROUP BY d.DEPT_TITLE, d.DEPT_ID
+WHERE e.DEPT_CODE = d.DEPT_ID;
+*/
+
+--3. 급여 등급이 S4 이상인 직원의 이름, 급여, 급여등급 조회
+--EMPLOYEE, SAL_GRADE
+SELECT e.EMP_NAME, e.SALARY, s.SAL_LEVEL
+FROM EMPLOYEE e, SAL_GRADE s
+WHERE e.SAL_LEVEL = s.SAL_LEVEL AND e.SAL_LEVEL IN ('S1', 'S2', 'S3', 'S4');

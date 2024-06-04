@@ -82,8 +82,8 @@ EMP_ID  EMP_NAME    DEPT_CODE   DEPT_ID     DEPT_TITLE
 ANSI 표준 구문
     구문 기준을 정할 때 정의되는 기준
     가장 유명한 표준 : ASCII(아스키코드)
-    연결에 사용할 두 컬럼이 다른 경우 : JOIN ON
-    연결에 사용할 두 컬럼이 같은 경우 : JOIN USING
+    연결에 사용할 두 컬럼명이 다른 경우 : JOIN ON
+    연결에 사용할 두 컬럼명이 같은 경우 : JOIN USING
 ORACLE 표준 구문
     FROM절에 . 로 구분해서 합칠 테이블명을 기술
     WHERE절에 합치기에 사용할 컬럼명 명시
@@ -118,7 +118,7 @@ WHERE LOCATION_ID = LOCAL_CODE;
 
 /*
 ASNI 표준 구문 (이어서)
-    2) 연결에 사용할 두 컬럼명이 샅은 경우 : JOIN USING을 사용
+    2) 연결에 사용할 두 컬럼명이 같은 경우 : JOIN USING을 사용
 FROM 테이블명
 JOIN 테이블명 USING (같은컬럼명)
 */
@@ -218,15 +218,98 @@ JOIN과 FROM에서 테이블을 설정할 때
 
 사용방법
 1)
-SELECT 테이블명1.컬럼명A, 테이블명2.컬럼명A
+SELECT 테이블명1.컬럼명C, 테이블명2.컬럼명C
 FROM 테이블명1, 테이블명2
-WHERE 테이블명1.컬럼명A = 테이블명2.컬럼명A
+WHERE 테이블명1.컬럼명C = 테이블명2.컬럼명C
 
 2)
 SELECT A.컬럼명C, B.컬럼명C
 FROM 테이블명1 A, 테이블명2 B
 WHERE A.컬럼명C = B.컬럼명C
+*/
 
+/*
+1. 외부 조인 OUTER JOIN
+두 테이블의 지정하는 컬럼값이 일치하지 않는 행도 조인에 포함시킴
+*/
+--OUTER JOIN과 비교할 INNER JOIN 쿼리문
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE
+/*INNER*/JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID);
 
+--1) LEFT [OUTER] JOIN
+--합치기에 사용한 두 테이블 중에서 왼쪽 편에 작성된 테이블의 컬럼 수를 기준으로 JOIN
 
+--ANSI
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE
+LEFT JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID);
+--JOIN구문을 기준으로 왼쪽에 작성된 테이블의 모든 행이 최종 결과(RESULT SET)에 포함되도록 하는 JOIN
+
+--ORACLE 표준
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE, DEPARTMENT
+WHERE DEPT_CODE = DEPT_ID(+);
+                       --(+) : 수 맞추기,
+                       --      DEPT_CODE와 DEPT_ID 값이 일치하지 않아도
+                       --      왼쪽에 있는 컬럼의 수에 맞게 NULL값이라도 넣어라
+/*
+EMP_NAME    DEPT_TITLE
+노옹철 	    총무부
+송종기	    총무부
+선동일	    총무부
+이오리	    NULL
+하동운	    NULL
+*/
+                       
+--2) RIGHT [OUTER] JOIN
+--합치기에 사용한 두 테이블 중에서 오른쪽 편에 작성된 테이블의 컬럼 수를 기준으로 JOIN
+
+--ANSI
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE
+RIGHT JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID);
+--JOIN구문을 기준으로 오른쪽에 작성된 테이블의 모든 행이 최종 결과(RESULT SET)에 포함되도록 하는 JOIN
+
+--ORACLE 표준
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE, DEPARTMENT
+WHERE DEPT_CODE(+) = DEPT_ID;
+             --(+) : 수 맞추기,
+             --      DEPT_CODE와 DEPT_ID 값이 일치하지 않아도
+             --      오른쪽에 있는 컬럼의 수에 맞게 NULL값이라도 넣어라
+/*
+EMP_NAME    DEPT_TITLE
+유하진	    회계관리부
+이태림	    기술지원부
+NULL	    해외영업3부
+NULL	    마케팅부
+NULL	    국내영업부
+*/
+
+--3) FULL [OUTER] JOIN
+--합치기에 사용한 두 테이블이 가진 모든 행을 결과에 포함
+--ORACLE에서는 FULL OUTER JOIN 구문 사용 불가능
+
+--ANSI
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE
+FULL JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID);
+--JOIN구문을 기준으로 양쪽에 작성된 테이블의 모든 행이 최종 결과(RESULT SET)에 포함되도록 하는 JOIN
+
+--ORACLE 표준
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE, DEPARTMENT
+WHERE DEPT_CODE(+) = DEPT_ID(+);
+/*
+★ 오류 발생
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE, DEPARTMENT
+WHERE DEPT_CODE(+) = DEPT_ID(+);
+★ 오류 코드
+ORA-01468: a predicate may reference only one outer-joined table
+★ 원인
+ORACLE에서는 FULL OUTER JOIN 구문 사용 불가능
+★ 문제 해결한 코드
+그냥 사용하지 않아야 함
 */

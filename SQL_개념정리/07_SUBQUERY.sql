@@ -49,8 +49,7 @@ SELECT EMP_ID, EMP_NAME, JOB_CODE, SALARY
 FROM EMPLOYEE
 WHERE SALARY >= (SELECT AVG(SALARY) FROM EMPLOYEE);
 
---SELECT에서 작성하는 서브쿼리
---예시1
+--SELECT에서 작성하는 서브쿼리 예시1
 --각 직급별로 평균 급여 조회
 --1) 급여 평균 구하기
 SELECT AVG(SALARY)

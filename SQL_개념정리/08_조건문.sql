@@ -51,7 +51,7 @@ CASE
     ELSE '초급'
   --ELSE '초급' : else {System.out.println("초급");}
 END "구분"
-  --구분 : 표시될 컬럼 명
+   --구분 : 표시될 컬럼 명
 FROM EMPLOYEE;
 /*
 ID  이름    급여     구분

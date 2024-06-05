@@ -187,8 +187,10 @@ SELECT TRUNC(5.7) FROM DUAL;
 SELECT TRUNC(-5.7) FROM DUAL;
 --결과 : -5
 SELECT TRUNC(5.789,1) FROM DUAL;
+                 --1 : 5.789를 소수점 첫째 자리까지 출력
 --결과 : 5.7
 SELECT TRUNC(5.789,2) FROM DUAL;
+                 --2 : 5.789를 소수점 둘째 자리까지 출력
 --결과 : 5.78
 
 /*

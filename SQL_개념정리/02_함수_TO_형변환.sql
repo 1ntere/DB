@@ -111,6 +111,8 @@ FROM DUAL;
 
 --5) DUAL 테이블을 사용해서 현재 날짜(SYSDATE), YYYY년 MM월 DD일 오전 00시 00분 00초
 SELECT SYSDATE, TO_CHAR(SYSDATE, 'YYYY"년" MM"월" DD"일" AM HH"시" MI"분" SS"초"')
+                                    --"" : ""를 붙여주면 형식을 변형시킬 수 있다.
+                                    --     ex."년", "월", "일", "시", "분", "초"
 FROM DUAL;
 /*
 24/06/05	2024년 06월 05일 오전 10시 24분 51초

@@ -77,3 +77,60 @@ CREATE TABLE EMPLOYEE2 AS SELECT * FROM EMPLOYEE;
 
 --EMPLOYEE2가 EMPLOYEE를 제대로 복사했는지 확인하기
 SELECT * FROM EMPLOYEE2;
+
+
+
+
+
+/*
+5. CHECK 제약조건
+컬럼에 기록되는 값에 조건을 설정할 수 있음
+CHECK (컬럼명 비교연산자 비교값)
+                       비교값은 변하는 값이나 함수 사용 불가능
+*/
+
+CREATE TABLE USER_CHECK (
+    USER_NO NUMBER PRIMARY KEY, 
+    USER_ID VARCHAR2(20) UNIQUE, 
+    USER_PW VARCHAR2(30) NOT NULL, 
+    USER_NAME VARCHAR2(30), 
+    
+    GENDER VARCHAR2(10) CHECK (GENDER IN ('남', '여'))
+                      --CHECK (GENDER IN ('남', '여')) : GENDER 라는 컬럼에는
+                      --                                 남 이나 여 라는 글자만 들어갈 수 있음
+);
+--Table USER_CHECK이(가) 생성되었습니다.
+
+INSERT INTO USER_CHECK VALUES (1, 'USER01', 'pw01', '홍길동', '남');
+--1 행 이(가) 삽입되었습니다.
+
+SELECT * FROM USER_CHECK;
+
+INSERT INTO USER_CHECK VALUES (2, 'USER02', 'pw02', '박철수', '남');
+--1 행 이(가) 삽입되었습니다.
+/*
+★ 오류가 발생한 코드
+INSERT INTO USER_CHECK VALUES (2, 'USER02', 'pw02', '박철수', '남자');
+★ 오류코드
+ORA-02290: check constraint (KH_T.SYS_C007159) violated
+★ 원인
+제약조건으로 남 이나 여 만 가능하게 했는데 남자 라는 값을 적용해서 에러 발생
+★ 문제 해결한 코드
+INSERT INTO USER_CHECK VALUES (2, 'USER02', 'pw02', '박철수', '남');
+*/
+
+INSERT INTO USER_CHECK VALUES (3, 'USER03', 'pw03', '강영희', '여');
+--1 행 이(가) 삽입되었습니다.
+
+/*
+CHECK 사용 방법
+1번 : 따로 index에 기록하지 않고 조건 설정만 할 경우
+컬럼명 자료형 CHECK(컬럼명 IN ('조건1', '조건2'));
+
+2번 : 따로 index에 기록한 다음 조건 설정한 경우 (한 줄 작성)
+컬럼명 자료형 CONSTRAINT 인덱스에기록할이름 CHECK(컬럼명 IN ('조건1', '조건2'));
+
+3번 : 따로 index에 기록한 다음 조건 설정한 경우 (여러 줄 작성)
+컬럼명 자료형.
+CONSTRAINT 인덱스에기록할이름 CHECK(컬럼명 IN ('조건1', '조건2'));
+*/

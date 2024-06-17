@@ -1,0 +1,37 @@
+CREATE TABLE USERS (
+    USERID NUMBER(10, 0) NOT NULL, 
+    NAME VARCHAR2(50) NOT NULL, 
+    EMAIL VARCHAR2(100) NOT NULL, 
+    PASSWORD VARCHAR2(100) NOT NULL, 
+    CREATEDATE DATE DEFAULT SYSDATE
+);
+--Table USERS이(가) 생성되었습니다.
+
+INSERT INTO USERS VALUES (1, '홍길동', 'hong@example.com', 'password123', '24/06/07');
+INSERT INTO USERS VALUES (2, '김철수', 'kim@example.com', 'mypassword', '24/06/07');
+INSERT INTO USERS VALUES (3, '이영희', 'lee@example.com', 'securepass', '24/06/07');
+--1 행 이(가) 삽입되었습니다. * 3
+
+CREATE TABLE BOARD(
+    POSTID NUMBER(10, 0) NOT NULL, 
+    USERID NUMBER(10, 0) NOT NULL, 
+    TITLE VARCHAR2(200) NOT NULL, 
+    CONTENT CLOB NOT NULL, 
+    CREATEDATE DATE DEFAULT SYSDATE
+);
+--Table BOARD이(가) 생성되었습니다.
+
+CREATE SEQUENCE BOARD_SEQ
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+--Sequence BOARD_SEQ이(가) 생성되었습니다.
+
+INSERT INTO BOARD VALUES (BOARD_SEQ.NEXTVAL, 1, '첫 번째 게시물', '이 것은 첫 번째 게시물의 내용입니다.', SYSDATE);
+INSERT INTO BOARD VALUES (BOARD_SEQ.NEXTVAL, 2, '두 번째 게시물', '이 것은 두 번째 게시물의 내용입니다.', SYSDATE);
+INSERT INTO BOARD VALUES (BOARD_SEQ.NEXTVAL, 3, '세 번째 게시물', '이 것은 세 번째 게시물의 내용입니다.', SYSDATE);
+--1 행 이(가) 삽입되었습니다. * 3
+
+SELECT * FROM BOARD;
+
